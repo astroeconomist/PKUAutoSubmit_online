@@ -288,29 +288,41 @@ def wechat_notification(userName, sckey):
     # else:
     #     print(str(response['errno']) + ' error: ' + response['errmsg'])
 
+def wechat_error_notification(userName, sckey):
+    with request.urlopen(
+            quote('https://sctapi.ftqq.com/' + sckey + '.send?title=报备失败！&desp=学号' +
+                  str(userName) + '报备失败！',
+                  safe='/:?=&')) as response:
+        response = json.loads(response.read().decode('utf-8'))
 
 def run(driver, userName, password, campus, mail_address, phone_number, reason, detail, destination, track,
         habitation, district, street, capture, path, wechat, sckey):
-    login(driver, userName, password)
-    print('=================================')
-
-    go_to_application_out(driver)
-    fill_out(driver, campus, mail_address, phone_number, reason, detail, destination, track)
-    print('=================================')
-
-    go_to_application_in(driver, userName, password)
-    fill_in(driver, campus, mail_address, phone_number, reason, detail, habitation, district, street)
-    print('=================================')
-
-    if capture:
-        screen_capture(driver, path)
+    try:
+        login(driver, userName, password)
         print('=================================')
 
-    if wechat:
-        wechat_notification(userName, sckey)
+        go_to_application_out(driver)
+        fill_out(driver, campus, mail_address, phone_number, reason, detail, destination, track)
         print('=================================')
 
-    print('报备成功！\n')
+        go_to_application_in(driver, userName, password)
+        fill_in(driver, campus, mail_address, phone_number, reason, detail, habitation, district, street)
+        print('=================================')
+
+        if capture:
+            screen_capture(driver, path)
+            print('=================================')
+
+        if wechat:
+            wechat_notification(userName, sckey)
+            print('=================================')
+
+        print('报备成功！\n')
+    except:
+        if wechat:
+            wechat_error_notification(userName, sckey)
+        
+     
 
 
 if __name__ == '__main__':
