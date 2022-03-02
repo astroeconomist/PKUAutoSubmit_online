@@ -314,7 +314,7 @@ def run(driver, userName, password, campus, mail_address, phone_number, reason, 
             print('=================================')
 
         if wechat:
-            wechat_notification(userName, sckey)
+#             wechat_notification(userName, sckey)
             print('=================================')
 
         print('报备成功！\n')
